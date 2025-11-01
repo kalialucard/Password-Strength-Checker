@@ -82,3 +82,4 @@ npm run cli check-strength "your-password-here"
 *Example:* `npm run cli check-strength "P@ssw0rd123!"`
 # Password-Strength-Checker
 # Password-Strength-Checker
+# Password-Strength-Checker
