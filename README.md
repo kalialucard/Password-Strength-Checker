@@ -17,12 +17,13 @@ This is a Next.js application that serves as a security toolkit for managing you
 - [Tailwind CSS](https://tailwindcss.com/)
 - [ShadCN UI](https://ui.shadcn.com/)
 - [Genkit](https://firebase.google.com/docs/genkit) for AI flows
+- [Docker](https://www.docker.com/)
 
 ## Getting Started
 
 To get this project up and running on your local machine, you'll need to have [Node.js](https://nodejs.org/) installed (which includes `npm`).
 
-### Installation & Setup
+### Installation & Setup (Local Development)
 
 1.  **Clone the repository** (if you haven't already).
 
@@ -41,3 +42,20 @@ To get this project up and running on your local machine, you'll need to have [N
 5.  **Open the app**: Open your web browser and navigate to [http://localhost:9002](http://localhost:9002).
 
 You should now see the Passlock application running! You can start exploring its features and making changes to the code in `src/app/page.tsx`.
+
+### Running with Docker
+
+Alternatively, if you have [Docker](https://www.docker.com/products/docker-desktop/) installed, you can build and run the application using Docker Compose.
+
+1.  **Build the Docker image and run the container**:
+    ```bash
+    docker-compose up --build
+    ```
+    This command will build the image defined in the `Dockerfile` and start the service.
+
+2.  **Open the app**: Open your web browser and navigate to [http://localhost:9002](http://localhost:9002).
+
+To stop the application, press `Ctrl+C` in the terminal where Docker Compose is running, and then run:
+```bash
+docker-compose down
+```
