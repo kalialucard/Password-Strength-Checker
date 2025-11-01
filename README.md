@@ -10,6 +10,7 @@ This is a Next.js application that serves as a security toolkit for managing you
 - **Username Generator**: Quickly generate unique and memorable usernames.
 - **Command-Line Interface (CLI)**: Access core features (password/username generation, strength & breach check) directly from your terminal.
 - **Light & Dark Mode**: The UI supports both light and dark themes.
+- **Docker Support**: Run the entire application in a containerized environment with Docker.
 
 ## Tech Stack
 
@@ -35,31 +36,33 @@ This tool is designed to run on any major operating system (Windows, macOS, Linu
 
 ---
 
-## How to Use
+## How to Get Started
 
-### 1. Running the Web Application (GUI)
+### 1. Get the Project Files
+
+To run this application on your own computer, you first need to copy all the project files from your current development environment to a folder on your local machine.
+
+### 2. Running the Web Application (GUI)
 
 You can run the web application either locally or with Docker.
 
 **Local Setup:**
-1.  **Clone the repository** (if you haven't already).
+1.  **Open your terminal**: Navigate to the project folder where you copied the files.
 
-2.  **Install dependencies**: Open your terminal in the project's root directory and run:
+2.  **Install dependencies**: Run the following command to install the necessary packages.
     ```bash
     npm install
     ```
 
-3.  **Set up environment variables** (Optional): For AI features to work, you may need to set up a `.env` file with your Google AI API key.
-
-4.  **Run the development server**:
+3.  **Run the development server**:
     ```bash
     npm run dev
     ```
 
-5.  **Open the app**: Open your web browser and go to [http://localhost:9002](http://localhost:9002).
+4.  **Open the app**: Open your web browser and go to [http://localhost:9002](http://localhost:9002).
 
 **Docker Setup:**
-1.  **Build and run the container**:
+1.  **Build and run the container**: From the root of the project folder, run:
     ```bash
     docker-compose up --build
     ```
@@ -67,9 +70,9 @@ You can run the web application either locally or with Docker.
 
 To stop the application, press `Ctrl+C` in the terminal where Docker Compose is running, and then run `docker-compose down`.
 
-### 2. Using the Command-Line Interface (CLI)
+### 3. Using the Command-Line Interface (CLI)
 
-You can also use Passlock's features directly from your terminal, without needing the web interface.
+You can also use Passlock's features directly from your terminal without needing the web interface. Make sure you have installed dependencies first (`npm install`).
 
 **1. Generate a Password**
 ```bash
