@@ -6,10 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
-import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { Copy, RefreshCw } from "lucide-react";
-import { Checkbox } from "./ui/checkbox";
 import { generatePassword as generate } from "@/lib/security";
 
 export function PasswordGenerator() {
@@ -94,19 +92,19 @@ export function PasswordGenerator() {
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="flex items-center space-x-3">
-            <Switch id="uppercase" checked={includeUppercase} onCheckedChange={setIncludeUppercase} />
+            <input type="checkbox" id="uppercase" checked={includeUppercase} onChange={(e) => setIncludeUppercase(e.target.checked)} className="h-4 w-4 rounded border-primary text-primary focus:ring-primary" />
             <Label htmlFor="uppercase">Uppercase (A-Z)</Label>
           </div>
           <div className="flex items-center space-x-3">
-            <Switch id="numbers" checked={includeNumbers} onCheckedChange={setIncludeNumbers} />
+            <input type="checkbox" id="numbers" checked={includeNumbers} onChange={(e) => setIncludeNumbers(e.target.checked)} className="h-4 w-4 rounded border-primary text-primary focus:ring-primary" />
             <Label htmlFor="numbers">Numbers (0-9)</Label>
           </div>
           <div className="flex items-center space-x-3">
-            <Switch id="symbols" checked={includeSymbols} onCheckedChange={setIncludeSymbols} />
+            <input type="checkbox" id="symbols" checked={includeSymbols} onChange={(e) => setIncludeSymbols(e.target.checked)} className="h-4 w-4 rounded border-primary text-primary focus:ring-primary" />
             <Label htmlFor="symbols">Symbols (!@#...)</Label>
           </div>
           <div className="flex items-center space-x-3">
-             <Checkbox id="ambiguous" checked={excludeAmbiguous} onCheckedChange={(checked) => setExcludeAmbiguous(Boolean(checked))} disabled={!includeSymbols} />
+             <input type="checkbox" id="ambiguous" checked={excludeAmbiguous} onChange={(e) => setExcludeAmbiguous(e.target.checked)} disabled={!includeSymbols} className="h-4 w-4 rounded border-primary text-primary focus:ring-primary disabled:opacity-50" />
             <Label htmlFor="ambiguous" className={!includeSymbols ? 'text-muted-foreground' : ''}>Exclude Ambiguous</Label>
           </div>
         </div>
