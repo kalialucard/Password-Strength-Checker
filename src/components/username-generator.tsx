@@ -17,9 +17,9 @@ export function UsernameGenerator() {
   }, []);
 
   useEffect(() => {
-    // Generate username only on the client-side after initial render
+    // Generate username only on the client-side after initial render to avoid hydration mismatch
     generateNewUsername();
-  }, []);
+  }, [generateNewUsername]);
 
   const copyToClipboard = () => {
     if (username) {

@@ -33,9 +33,9 @@ export function PasswordGenerator() {
   }, [length, includeUppercase, includeNumbers, includeSymbols, excludeAmbiguous]);
   
   useEffect(() => {
-    // Generate password only on the client-side after initial render
+    // Generate password only on the client-side after initial render to avoid hydration mismatch
     generateNewPassword();
-  }, []);
+  }, [generateNewPassword]);
 
   const copyToClipboard = () => {
     if (password) {
