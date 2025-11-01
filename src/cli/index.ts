@@ -5,9 +5,10 @@ import chalk from 'chalk';
 import { generatePassword, generateUsername, checkStrength } from '@/lib/security';
 import { passwordBreachCheck } from '@/ai/flows/password-breach-check';
 import { config } from 'dotenv';
-import '@/ai/genkit'; // Ensures AI is initialized
 
+// Initialize dotenv and genkit AI
 config();
+import '@/ai/genkit';
 
 const program = new Command();
 
