@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -10,7 +10,12 @@ import { generateUsername as generate } from "@/lib/security";
 
 export function UsernameGenerator() {
   const [username, setUsername] = useState("");
+  const [isClient, setIsClient] = useState(false);
   const { toast } = useToast();
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const generateNewUsername = useCallback(() => {
     setUsername(generate());
@@ -25,6 +30,10 @@ export function UsernameGenerator() {
       });
     }
   };
+
+  if (!isClient) {
+    return null;
+  }
   
   return (
     <Card>
