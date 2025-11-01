@@ -6,24 +6,19 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Copy, RefreshCw, UserPlus } from "lucide-react";
-
-const adjectives = ["Agile", "Bright", "Clever", "Dandy", "Eager", "Fancy", "Gentle", "Happy", "Jolly", "Keen", "Lively", "Merry", "Nice", "Omega", "Proud", "Quick", "Royal", "Silly", "Tricky", "Vivid", "Witty", "Zany"];
-const nouns = ["Ape", "Bear", "Cat", "Dog", "Elk", "Fox", "Goat", "Hawk", "Imp", "Jay", "Kite", "Lion", "Mink", "Newt", "Owl", "Puma", "Quail", "Rat", "Snake", "Tiger", "Vole", "Wolf", "Yak", "Zebra"];
+import { generateUsername as generate } from "@/lib/security";
 
 export function UsernameGenerator() {
   const [username, setUsername] = useState("");
   const { toast } = useToast();
 
-  const generateUsername = useCallback(() => {
-    const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
-    const noun = nouns[Math.floor(Math.random() * nouns.length)];
-    const digits = Math.floor(10 + Math.random() * 90);
-    setUsername(`${adj}${noun}${digits}`);
+  const generateNewUsername = useCallback(() => {
+    setUsername(generate());
   }, []);
 
   useEffect(() => {
-    generateUsername();
-  }, [generateUsername]);
+    generateNewUsername();
+  }, [generateNewUsername]);
 
   const copyToClipboard = () => {
     if (username) {
@@ -58,12 +53,12 @@ export function UsernameGenerator() {
             <Button variant="ghost" size="icon" onClick={copyToClipboard} aria-label="Copy username">
               <Copy className="h-5 w-5" />
             </Button>
-            <Button variant="ghost" size="icon" onClick={generateUsername} aria-label="Generate new username">
+            <Button variant="ghost" size="icon" onClick={generateNewUsername} aria-label="Generate new username">
               <RefreshCw className="h-5 w-5" />
             </Button>
           </div>
         </div>
-        <Button onClick={generateUsername} className="w-full font-headline text-lg">
+        <Button onClick={generateNewUsername} className="w-full font-headline text-lg">
           <RefreshCw className="mr-2 h-4 w-4"/>
           Generate Username
         </Button>

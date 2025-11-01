@@ -2,7 +2,6 @@ import { Header } from '@/components/header';
 import { PasswordGenerator } from '@/components/password-generator';
 import { StrengthChecker } from '@/components/strength-checker';
 import { UsernameGenerator } from '@/components/username-generator';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { KeyRound, Shield, UserPlus } from 'lucide-react';
 
@@ -38,7 +37,7 @@ export default function Home() {
                 <UsernameGenerator />
             </TabsContent>
             </Tabs>
-            <div className="lg:hidden">
+            <div className="lg:hidden mt-6">
                 <UsernameGenerator />
             </div>
         </div>

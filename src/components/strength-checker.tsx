@@ -9,47 +9,15 @@ import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { CheckCircle, Loader2 } from "lucide-react";
+import { checkStrength, Strength } from "@/lib/security";
 
-type Strength = {
-    score: number;
-    feedback: string[];
-    colorClass: string;
-    label: string;
-};
 
 export function StrengthChecker() {
     const [password, setPassword] = useState("");
     const [isCheckingBreach, setIsCheckingBreach] = useState(false);
     const { toast } = useToast();
 
-    const checkStrength = (p: string): Strength => {
-        let score = 0;
-        const feedback: string[] = [];
-        
-        if (p.length === 0) return { score: 0, feedback: [], colorClass: 'bg-destructive', label: '' };
-
-        if (p.length >= 8) score += 1; else feedback.push("Use at least 8 characters.");
-        if (p.length >= 12) score += 1;
-        if (/[a-z]/.test(p)) score += 1; else feedback.push("Include a lowercase letter.");
-        if (/[A-Z]/.test(p)) score += 1; else feedback.push("Include an uppercase letter.");
-        if (/\d/.test(p)) score += 1; else feedback.push("Include a number.");
-        if (/[^a-zA-Z0-9]/.test(p)) score += 1; else feedback.push("Include a special character.");
-        
-        const totalPoints = 6;
-        const percentage = (score / totalPoints) * 100;
-
-        let colorClass = "bg-destructive";
-        let label = "Very Weak";
-
-        if (percentage >= 100) { colorClass = "bg-green-500"; label = "Very Strong"; } 
-        else if (percentage >= 80) { colorClass = "bg-green-500"; label = "Strong"; } 
-        else if (percentage >= 60) { colorClass = "bg-yellow-500"; label = "Moderate"; } 
-        else if (percentage >= 40) { colorClass = "bg-orange-500"; label = "Weak"; }
-        
-        return { score: percentage, feedback, colorClass, label };
-    };
-
-    const strength = useMemo(() => checkStrength(password), [password]);
+    const strength: Strength = useMemo(() => checkStrength(password), [password]);
 
     const handleBreachCheck = async () => {
         if (!password) {

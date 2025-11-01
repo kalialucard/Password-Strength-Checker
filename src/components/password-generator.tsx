@@ -10,12 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { Copy, RefreshCw } from "lucide-react";
 import { Checkbox } from "./ui/checkbox";
-
-const lowercaseChars = "abcdefghijklmnopqrstuvwxyz";
-const uppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const numberChars = "0123456789";
-const symbolChars = "!@#$%^&*()_+-=[]{}|;:,.<>?";
-const ambiguousChars = "[]{}()/\\'\"~,;.<>";
+import { generatePassword as generate } from "@/lib/security";
 
 export function PasswordGenerator() {
   const [password, setPassword] = useState("");
@@ -26,34 +21,20 @@ export function PasswordGenerator() {
   const [excludeAmbiguous, setExcludeAmbiguous] = useState(false);
   const { toast } = useToast();
 
-  const generatePassword = useCallback(() => {
-    let charset = lowercaseChars;
-    if (includeUppercase) charset += uppercaseChars;
-    if (includeNumbers) charset += numberChars;
-    if (includeSymbols) {
-        let effectiveSymbols = symbolChars;
-        if(excludeAmbiguous) {
-            effectiveSymbols = symbolChars.split('').filter(char => !ambiguousChars.includes(char)).join('');
-        }
-        charset += effectiveSymbols;
-    }
-    
-    let newPassword = "";
-    const crypto = window.crypto;
-    const randomValues = new Uint32Array(length);
-    crypto.getRandomValues(randomValues);
-
-    for (let i = 0; i < length; i++) {
-        newPassword += charset[randomValues[i] % charset.length];
-    }
-    
+  const generateNewPassword = useCallback(() => {
+    const newPassword = generate({
+      length,
+      includeUppercase,
+      includeNumbers,
+      includeSymbols,
+      excludeAmbiguous,
+    });
     setPassword(newPassword);
-
   }, [length, includeUppercase, includeNumbers, includeSymbols, excludeAmbiguous]);
   
   useEffect(() => {
-    generatePassword();
-  }, [generatePassword]);
+    generateNewPassword();
+  }, [generateNewPassword]);
 
   const copyToClipboard = () => {
     if (password) {
@@ -85,7 +66,7 @@ export function PasswordGenerator() {
             <Button variant="ghost" size="icon" onClick={copyToClipboard} aria-label="Copy password">
               <Copy className="h-5 w-5" />
             </Button>
-            <Button variant="ghost" size="icon" onClick={generatePassword} aria-label="Generate new password">
+            <Button variant="ghost" size="icon" onClick={generateNewPassword} aria-label="Generate new password">
               <RefreshCw className="h-5 w-5" />
             </Button>
           </div>
@@ -125,7 +106,7 @@ export function PasswordGenerator() {
           </div>
         </div>
 
-        <Button onClick={generatePassword} className="w-full font-headline text-lg">
+        <Button onClick={generateNewPassword} className="w-full font-headline text-lg">
           <RefreshCw className="mr-2 h-4 w-4"/>
           Generate Password
         </Button>
