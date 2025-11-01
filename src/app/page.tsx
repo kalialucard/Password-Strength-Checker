@@ -16,14 +16,14 @@ export default function Home() {
                 <p className="text-lg text-muted-foreground">Generate, analyze, and manage your credentials with ease.</p>
             </div>
             <Tabs defaultValue="generator" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-3 mx-auto max-w-md">
+            <TabsList className="grid w-full grid-cols-3 mx-auto max-w-md">
                 <TabsTrigger value="generator">
                     <KeyRound className="mr-2 h-4 w-4" /> Generator
                 </TabsTrigger>
                 <TabsTrigger value="checker">
                     <Shield className="mr-2 h-4 w-4" /> Strength Check
                 </TabsTrigger>
-                 <TabsTrigger value="username" className="hidden lg:flex">
+                 <TabsTrigger value="username">
                     <UserPlus className="mr-2 h-4 w-4" /> Username
                 </TabsTrigger>
             </TabsList>
@@ -37,9 +37,6 @@ export default function Home() {
                 <UsernameGenerator />
             </TabsContent>
             </Tabs>
-            <div className="lg:hidden mt-6">
-                <UsernameGenerator />
-            </div>
         </div>
       </main>
     </div>
