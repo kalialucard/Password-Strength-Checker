@@ -72,7 +72,11 @@ To stop the application, press `Ctrl+C` in the terminal where Docker Compose is 
 
 ### 3. Using the Command-Line Interface (CLI)
 
-You can also use Passlock's features directly from your terminal without needing the web interface. Make sure you have installed dependencies first (`npm install`).
+You can also use Passlock's features directly from your terminal without needing the web interface.
+
+#### Local Usage
+
+Make sure you have installed dependencies first (`npm install`).
 
 **1. Generate a Password**
 ```bash
@@ -98,3 +102,22 @@ This command analyzes strength and automatically checks for breaches using AI.
 npm run cli check-strength "your-password-here"
 ```
 *Example:* `npm run cli check-strength "P@ssw0rd123!"`
+
+#### Docker Usage
+
+First, ensure the Docker container is built by running `docker-compose build`. Then, you can run any CLI command using `docker-compose run --rm passlock`.
+
+**1. Generate a Password**
+```bash
+docker-compose run --rm passlock npm run cli generate-password -l 24
+```
+
+**2. Generate a Username**
+```bash
+docker-compose run --rm passlock npm run cli generate-username
+```
+
+**3. Check Password Strength & for Breaches**
+```bash
+docker-compose run --rm passlock npm run cli check-strength "P@ssw0rd123!"
+```

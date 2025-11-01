@@ -1,36 +1,29 @@
-# Use an official Node.js runtime as a parent image
-FROM node:20-alpine AS base
-
-# Set the working directory
+# Stage 1: Install dependencies
+FROM node:20-alpine AS deps
 WORKDIR /app
-
-# Copy package.json and package-lock.json (if available)
-COPY package.json ./
-COPY package-lock.json* ./
-
-# --- Dependencies ---
-FROM base AS deps
-# Install dependencies
+COPY package.json package-lock.json* ./
 RUN npm install
 
-# --- Build ---
-FROM deps AS build
-# Copy the rest of the application files
+# Stage 2: Build the application
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-# Build the Next.js application
+# The GENKIT_ENV environment variable is required by Genkit for production builds.
+ENV NODE_ENV=production
 RUN npm run build
 
-# --- Production ---
-FROM base AS production
-# Copy built files from the build stage
-COPY --from=build /app/.next ./.next
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/package.json ./package.json
-COPY --from=build /app/public ./public
-COPY --from=build /app/next.config.ts ./next.config.ts
+# Stage 3: Production image
+FROM node:20-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
 
-# Expose the port the app runs on
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
+
 EXPOSE 9002
+ENV PORT 9002
 
-# Define the command to run the app
-CMD ["npm", "start", "--", "-p", "9002"]
+CMD ["npm", "run", "start"]
