@@ -6,7 +6,7 @@ This is a Next.js application that serves as a security toolkit for managing you
 
 - **Password Generator**: Create strong, secure, and customizable passwords. You can specify length and include/exclude uppercase letters, numbers, and symbols.
 - **Password Strength Checker**: Analyze how strong a password is based on criteria like length, character diversity, and more.
-- **AI-Powered Breach Check**: Securely and automatically checks if a password has been part of any known data breaches as you type, using the HaveIBeenPwned service via a Genkit AI flow.
+- **AI-Powered Breach Check**: Securely and automatically checks if a password has been part of any known data breaches as you type, using a Genkit AI flow.
 - **Username Generator**: Quickly generate unique and memorable usernames.
 - **Command-Line Interface (CLI)**: Access core features (password/username generation, strength & breach check) directly from your terminal.
 - **Light & Dark Mode**: The UI supports both light and dark themes.
@@ -21,12 +21,27 @@ This is a Next.js application that serves as a security toolkit for managing you
 - [Commander.js](https://github.com/tj/commander.js) for the CLI
 - [Docker](https://www.docker.com/)
 
-## Getting Started
+---
 
-To get this project up and running on your local machine, you'll need to have [Node.js](https://nodejs.org/) installed (which includes `npm`). This will work on any major operating system (Windows, macOS, Linux).
+## System Requirements
 
-### Installation & Setup (Local Development)
+This tool is designed to run on any major operating system (Windows, macOS, Linux). You have two options for running it:
 
+**Option 1: Local Development**
+- You must have **[Node.js](https://nodejs.org/)** installed (which includes `npm`).
+
+**Option 2: Docker**
+- You must have **[Docker](https://www.docker.com/products/docker-desktop/)** installed and running.
+
+---
+
+## How to Use
+
+### 1. Running the Web Application (GUI)
+
+You can run the web application either locally or with Docker.
+
+**Local Setup:**
 1.  **Clone the repository** (if you haven't already).
 
 2.  **Install dependencies**: Open your terminal in the project's root directory and run:
@@ -34,37 +49,27 @@ To get this project up and running on your local machine, you'll need to have [N
     npm install
     ```
 
-3.  **Set up environment variables**: For AI features to work, you will need to configure your Genkit environment. Typically this involves setting up a `.env` file with your Google AI API key.
+3.  **Set up environment variables** (Optional): For AI features to work, you may need to set up a `.env` file with your Google AI API key.
 
 4.  **Run the development server**:
     ```bash
     npm run dev
     ```
 
-5.  **Open the app**: Open your web browser and navigate to [http://localhost:9002](http://localhost:9002).
+5.  **Open the app**: Open your web browser and go to [http://localhost:9002](http://localhost:9002).
 
-You should now see the Passlock application running!
-
-### Running with Docker
-
-Alternatively, if you have [Docker](https://www.docker.com/products/docker-desktop/) installed, you can build and run the application using Docker Compose.
-
-1.  **Build the Docker image and run the container**:
+**Docker Setup:**
+1.  **Build and run the container**:
     ```bash
     docker-compose up --build
     ```
-    This command will build the image defined in the `Dockerfile` and start the service.
+2.  **Open the app**: Open your web browser and go to [http://localhost:9002](http://localhost:9002).
 
-2.  **Open the app**: Open your web browser and navigate to [http://localhost:9002](http://localhost:9002).
+To stop the application, press `Ctrl+C` in the terminal where Docker Compose is running, and then run `docker-compose down`.
 
-To stop the application, press `Ctrl+C` in the terminal where Docker Compose is running, and then run:
-```bash
-docker-compose down
-```
+### 2. Using the Command-Line Interface (CLI)
 
-### Using the Command-Line Interface (CLI)
-
-You can also use Passlock's features directly from your terminal, without needing a GUI.
+You can also use Passlock's features directly from your terminal, without needing the web interface.
 
 **1. Generate a Password**
 ```bash
@@ -77,7 +82,7 @@ npm run cli generate-password
 - `--no-symbols`: Exclude symbols.
 - `--exclude-ambiguous`: Exclude ambiguous characters.
 
-Example: `npm run cli generate-password -l 32 --no-symbols`
+*Example:* `npm run cli generate-password -l 32 --no-symbols`
 
 **2. Generate a Username**
 ```bash
@@ -89,4 +94,4 @@ This command analyzes strength and automatically checks for breaches using AI.
 ```bash
 npm run cli check-strength "your-password-here"
 ```
-Example: `npm run cli check-strength "P@ssw0rd123!"`
+*Example:* `npm run cli check-strength "P@ssw0rd123!"`
