@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -15,11 +15,6 @@ export function UsernameGenerator() {
   const generateNewUsername = useCallback(() => {
     setUsername(generate());
   }, []);
-
-  useEffect(() => {
-    // Generate username only on the client-side after initial render to avoid hydration mismatch
-    generateNewUsername();
-  }, [generateNewUsername]);
 
   const copyToClipboard = () => {
     if (username) {
@@ -46,7 +41,7 @@ export function UsernameGenerator() {
             type="text"
             value={username}
             readOnly
-            placeholder="Generating username..."
+            placeholder="Click 'Generate' to create a username"
             className="pr-20 text-lg font-code"
             aria-label="Generated Username"
           />
