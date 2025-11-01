@@ -53,8 +53,7 @@ program
 program
     .command('check-strength <password>')
     .description('Check the strength of a password and look for breaches.')
-    .option('--breach', 'Check if the password has been exposed in a data breach (requires AI)')
-    .action(async (password, options) => {
+    .action(async (password) => {
         console.log(chalk.blue('Analyzing password strength...'));
 
         const strength = checkStrength(password);
@@ -68,18 +67,16 @@ program
             console.log(chalk.green('\nThis is an excellent password!'));
         }
 
-        if (options.breach) {
-            console.log(chalk.blue('\nChecking for breaches with AI...'));
-            try {
-                const result = await passwordBreachCheck({ password });
-                if (result.isBreached) {
-                    console.log(chalk.red.bold(`\nBREACH ALERT: This password was found in ${result.breachCount} known data breaches.`));
-                } else {
-                    console.log(chalk.green.bold('\nGOOD NEWS: This password was not found in any of the checked data breaches.'));
-                }
-            } catch (error) {
-                console.error(chalk.red('\nError checking for breaches:'), error);
+        console.log(chalk.blue('\nChecking for breaches with AI...'));
+        try {
+            const result = await passwordBreachCheck({ password });
+            if (result.isBreached) {
+                console.log(chalk.red.bold(`\nBREACH ALERT: This password was found in ${result.breachCount} known data breaches.`));
+            } else {
+                console.log(chalk.green.bold('\nGOOD NEWS: This password was not found in any of the checked data breaches.'));
             }
+        } catch (error) {
+            console.error(chalk.red('\nError checking for breaches:'), error);
         }
     });
 

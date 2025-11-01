@@ -1,67 +1,72 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { passwordBreachCheck } from "@/ai/flows/password-breach-check";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
-import { CheckCircle, Loader2 } from "lucide-react";
+import { CheckCircle, Shield, Loader2, AlertTriangle } from "lucide-react";
 import { checkStrength, Strength } from "@/lib/security";
 
+// Debounce function
+const debounce = <F extends (...args: any[]) => any>(func: F, waitFor: number) => {
+  let timeout: NodeJS.Timeout;
+  return (...args: Parameters<F>): Promise<ReturnType<F>> =>
+    new Promise(resolve => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => resolve(func(...args)), waitFor);
+    });
+};
 
 export function StrengthChecker() {
     const [password, setPassword] = useState("");
     const [isCheckingBreach, setIsCheckingBreach] = useState(false);
+    const [breachResult, setBreachResult] = useState<{ isBreached: boolean; breachCount: number } | null>(null);
     const { toast } = useToast();
 
     const strength: Strength = useMemo(() => checkStrength(password), [password]);
 
-    const handleBreachCheck = async () => {
-        if (!password) {
-            toast({
-                title: "No password provided",
-                description: "Please enter a password to check for breaches.",
-                variant: "destructive"
-            });
-            return;
-        }
-
-        setIsCheckingBreach(true);
-        try {
-            const result = await passwordBreachCheck({ password });
-            if (result.isBreached) {
-                toast({
-                    title: "Password Breached!",
-                    description: `This password has appeared in ${result.breachCount} known data breaches. It is not safe to use.`,
-                    variant: "destructive",
-                    duration: 9000,
-                });
-            } else {
-                toast({
-                    title: "Password Secure",
-                    description: "This password was not found in any of the checked data breaches.",
-                });
+    const debouncedBreachCheck = useCallback(
+        debounce(async (pass: string) => {
+            if (!pass) {
+                setBreachResult(null);
+                setIsCheckingBreach(false);
+                return;
             }
-        } catch (error) {
-            console.error("Breach check failed:", error);
-            toast({
-                title: "Error",
-                description: "Could not perform the breach check. Please try again later.",
-                variant: "destructive",
-            });
-        } finally {
-            setIsCheckingBreach(false);
-        }
-    };
+            setIsCheckingBreach(true);
+            try {
+                const result = await passwordBreachCheck({ password: pass });
+                setBreachResult(result);
+            } catch (error) {
+                console.error("Breach check failed:", error);
+                toast({
+                    title: "Error",
+                    description: "Could not perform the breach check. Please try again later.",
+                    variant: "destructive",
+                });
+                setBreachResult(null);
+            } finally {
+                setIsCheckingBreach(false);
+            }
+        }, 500),
+        [toast]
+    );
+
+    useEffect(() => {
+        setIsCheckingBreach(true);
+        debouncedBreachCheck(password);
+    }, [password, debouncedBreachCheck]);
 
     return (
         <Card>
             <CardHeader>
-                <CardTitle className="font-headline">Password Strength Checker</CardTitle>
-                <CardDescription>Analyze your password's strength and check for breaches.</CardDescription>
+                <CardTitle className="font-headline flex items-center">
+                    <Shield className="mr-2 h-6 w-6" />
+                    Password Strength & Breach Check
+                </CardTitle>
+                <CardDescription>Analyze your password's strength and check for data breaches.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
                 <Input
@@ -74,10 +79,12 @@ export function StrengthChecker() {
 
                 {password.length > 0 && (
                     <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                            <span className="text-sm text-muted-foreground">Strength: <span className="font-bold text-foreground">{strength.label}</span></span>
+                        <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                                <span className="text-sm text-muted-foreground">Strength: <span className="font-bold text-foreground">{strength.label}</span></span>
+                            </div>
+                            <Progress value={strength.score} className="h-2" indicatorClassName={strength.colorClass} />
                         </div>
-                        <Progress value={strength.score} className="h-2" indicatorClassName={strength.colorClass} />
                         
                         <div>
                             {strength.feedback.length > 0 ? (
@@ -90,26 +97,48 @@ export function StrengthChecker() {
                                   </ul>
                                 </div>
                             ) : (
-                                <Alert className="border-accent/50">
-                                    <CheckCircle className="h-4 w-4 text-accent" />
-                                    <AlertTitle className="text-accent">Excellent Password!</AlertTitle>
+                                <Alert className="border-green-500/50 text-green-500">
+                                    <CheckCircle className="h-4 w-4 text-green-500" />
+                                    <AlertTitle className="text-green-600 dark:text-green-500">Excellent Password!</AlertTitle>
                                     <AlertDescription className="text-muted-foreground">
-                                        This password meets all the recommended criteria.
+                                        This password meets all the recommended criteria for strength.
                                     </AlertDescription>
                                 </Alert>
                             )}
                         </div>
+
+                         <div className="space-y-2">
+                             <h4 className="text-sm font-medium text-foreground">AI Data Breach Check</h4>
+                            {isCheckingBreach && (
+                                <div className="flex items-center text-sm text-muted-foreground">
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Checking for breaches...
+                                </div>
+                            )}
+                            {!isCheckingBreach && breachResult && breachResult.isBreached && (
+                                 <Alert variant="destructive">
+                                    <AlertTriangle className="h-4 w-4" />
+                                    <AlertTitle>Breach Alert!</AlertTitle>
+                                    <AlertDescription>
+                                        This password was found in {breachResult.breachCount} known data breaches. Do not use it.
+                                    </AlertDescription>
+                                </Alert>
+                            )}
+                             {!isCheckingBreach && breachResult && !breachResult.isBreached && (
+                                <Alert className="border-green-500/50 text-green-500">
+                                    <CheckCircle className="h-4 w-4 text-green-500" />
+                                    <AlertTitle className="text-green-600 dark:text-green-500">Looks Good!</AlertTitle>
+                                    <AlertDescription className="text-muted-foreground">
+                                        This password was not found in any of the checked data breaches.
+                                    </AlertDescription>
+                                </Alert>
+                            )}
+                             <p className="text-xs text-muted-foreground text-center pt-2">
+                                The breach check is performed securely using GenAI and your password is not stored.
+                            </p>
+                        </div>
                     </div>
                 )}
-
-                <Button onClick={handleBreachCheck} className="w-full font-headline text-lg" disabled={isCheckingBreach || !password}>
-                    {isCheckingBreach ? (
-                        <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Checking...</>
-                    ) : "Check for Breaches with AI"}
-                </Button>
-                 <p className="text-xs text-muted-foreground text-center">
-                    The breach check is performed securely using GenAI and your password is not stored.
-                </p>
             </CardContent>
         </Card>
     );

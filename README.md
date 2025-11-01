@@ -6,9 +6,9 @@ This is a Next.js application that serves as a security toolkit for managing you
 
 - **Password Generator**: Create strong, secure, and customizable passwords. You can specify length and include/exclude uppercase letters, numbers, and symbols.
 - **Password Strength Checker**: Analyze how strong a password is based on criteria like length, character diversity, and more.
-- **AI-Powered Breach Check**: Securely checks if a password has been part of any known data breaches using the HaveIBeenPwned service via a Genkit AI flow.
+- **AI-Powered Breach Check**: Securely and automatically checks if a password has been part of any known data breaches as you type, using the HaveIBeenPwned service via a Genkit AI flow.
 - **Username Generator**: Quickly generate unique and memorable usernames.
-- **Command-Line Interface (CLI)**: Access core features (password/username generation, strength check) directly from your terminal.
+- **Command-Line Interface (CLI)**: Access core features (password/username generation, strength & breach check) directly from your terminal.
 - **Light & Dark Mode**: The UI supports both light and dark themes.
 
 ## Tech Stack
@@ -23,7 +23,7 @@ This is a Next.js application that serves as a security toolkit for managing you
 
 ## Getting Started
 
-To get this project up and running on your local machine, you'll need to have [Node.js](https://nodejs.org/) installed (which includes `npm`).
+To get this project up and running on your local machine, you'll need to have [Node.js](https://nodejs.org/) installed (which includes `npm`). This will work on any major operating system (Windows, macOS, Linux).
 
 ### Installation & Setup (Local Development)
 
@@ -43,7 +43,7 @@ To get this project up and running on your local machine, you'll need to have [N
 
 5.  **Open the app**: Open your web browser and navigate to [http://localhost:9002](http://localhost:9002).
 
-You should now see the Passlock application running! You can start exploring its features and making changes to the code in `src/app/page.tsx`.
+You should now see the Passlock application running!
 
 ### Running with Docker
 
@@ -64,7 +64,7 @@ docker-compose down
 
 ### Using the Command-Line Interface (CLI)
 
-You can also use Passlock's features directly from your terminal.
+You can also use Passlock's features directly from your terminal, without needing a GUI.
 
 **1. Generate a Password**
 ```bash
@@ -84,11 +84,9 @@ Example: `npm run cli generate-password -l 32 --no-symbols`
 npm run cli generate-username
 ```
 
-**3. Check Password Strength**
+**3. Check Password Strength & for Breaches**
+This command analyzes strength and automatically checks for breaches using AI.
 ```bash
 npm run cli check-strength "your-password-here"
 ```
-**Options:**
-- `--breach`: Check for breaches using the AI flow.
-
-Example: `npm run cli check-strength "P@ssw0rd123!" --breach`
+Example: `npm run cli check-strength "P@ssw0rd123!"`
