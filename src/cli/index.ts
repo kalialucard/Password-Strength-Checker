@@ -4,15 +4,10 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import { generatePassword, generateUsername, checkStrength } from '@/lib/security';
 import { passwordBreachCheck } from '@/ai/flows/password-breach-check';
-import { configureGenkit } from 'genkit';
-import { googleAI } from '@genkit-ai/google-genai';
 import { config } from 'dotenv';
+import '@/ai/genkit'; // Ensures AI is initialized
+
 config();
-
-configureGenkit({
-    plugins: [googleAI()],
-});
-
 
 const program = new Command();
 

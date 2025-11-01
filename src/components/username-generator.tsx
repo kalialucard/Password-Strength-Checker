@@ -10,16 +10,15 @@ import { generateUsername as generate } from "@/lib/security";
 
 export function UsernameGenerator() {
   const [username, setUsername] = useState("");
-  const [isClient, setIsClient] = useState(false);
   const { toast } = useToast();
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   const generateNewUsername = useCallback(() => {
     setUsername(generate());
   }, []);
+
+  useEffect(() => {
+    generateNewUsername();
+  }, [generateNewUsername]);
 
   const copyToClipboard = () => {
     if (username) {
@@ -30,10 +29,6 @@ export function UsernameGenerator() {
       });
     }
   };
-
-  if (!isClient) {
-    return null;
-  }
   
   return (
     <Card>
@@ -50,7 +45,7 @@ export function UsernameGenerator() {
             type="text"
             value={username}
             readOnly
-            placeholder="Click 'Generate' to create a username"
+            placeholder="Generating username..."
             className="pr-20 text-lg font-code"
             aria-label="Generated Username"
           />

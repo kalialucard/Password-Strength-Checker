@@ -17,12 +17,7 @@ export function PasswordGenerator() {
   const [includeNumbers, setIncludeNumbers] = useState(true);
   const [includeSymbols, setIncludeSymbols] = useState(true);
   const [excludeAmbiguous, setExcludeAmbiguous] = useState(false);
-  const [isClient, setIsClient] = useState(false);
   const { toast } = useToast();
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   const generateNewPassword = useCallback(() => {
     const newPassword = generate({
@@ -35,6 +30,10 @@ export function PasswordGenerator() {
     setPassword(newPassword);
   }, [length, includeUppercase, includeNumbers, includeSymbols, excludeAmbiguous]);
   
+  useEffect(() => {
+    generateNewPassword();
+  }, [generateNewPassword]);
+
   const copyToClipboard = () => {
     if (password) {
       navigator.clipboard.writeText(password);
@@ -44,10 +43,6 @@ export function PasswordGenerator() {
       });
     }
   };
-
-  if (!isClient) {
-    return null;
-  }
 
   return (
     <Card>
@@ -61,7 +56,7 @@ export function PasswordGenerator() {
             type="text"
             value={password}
             readOnly
-            placeholder="Click 'Generate' to create a password"
+            placeholder="Generating password..."
             aria-label="Generated Password"
             className="pr-20 text-lg font-code"
           />
