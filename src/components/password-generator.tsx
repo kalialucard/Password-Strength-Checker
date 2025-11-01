@@ -33,8 +33,9 @@ export function PasswordGenerator() {
   }, [length, includeUppercase, includeNumbers, includeSymbols, excludeAmbiguous]);
   
   useEffect(() => {
+    // Generate password only on the client-side after initial render
     generateNewPassword();
-  }, [generateNewPassword]);
+  }, []);
 
   const copyToClipboard = () => {
     if (password) {
@@ -58,7 +59,7 @@ export function PasswordGenerator() {
             type="text"
             value={password}
             readOnly
-            placeholder="Your generated password"
+            placeholder="Generating password..."
             aria-label="Generated Password"
             className="pr-20 text-lg font-code"
           />

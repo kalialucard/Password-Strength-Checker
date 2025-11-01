@@ -17,8 +17,9 @@ export function UsernameGenerator() {
   }, []);
 
   useEffect(() => {
+    // Generate username only on the client-side after initial render
     generateNewUsername();
-  }, [generateNewUsername]);
+  }, []);
 
   const copyToClipboard = () => {
     if (username) {
@@ -45,7 +46,7 @@ export function UsernameGenerator() {
             type="text"
             value={username}
             readOnly
-            placeholder="Click Generate to create a username"
+            placeholder="Generating username..."
             className="pr-20 text-lg font-code"
             aria-label="Generated Username"
           />
